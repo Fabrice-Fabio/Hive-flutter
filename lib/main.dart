@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_tutorial/setupLocator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'todo_item.dart';
 import 'todo_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  /// Setup Hive
   await Hive.initFlutter((await getApplicationDocumentsDirectory()).path);
   Hive.registerAdapter(TodoItemAdapter());
+
+  /// Setup DI
+  setupLocator();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final TodoService _todoService = TodoService();
+  final TodoService _todoService = locator<TodoService>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +49,7 @@ class TodoListPage extends StatefulWidget {
 }
 
 class _TodoListPageState extends State<TodoListPage> {
-  final TodoService _todoService = TodoService();
+  final TodoService _todoService = locator<TodoService>();
   final TextEditingController _controller = TextEditingController();
 
   @override
